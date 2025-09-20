@@ -61,7 +61,7 @@ const ETLPipeline: React.FC = () => {
 
   const fetchPipelines = async () => {
     try {
-      const response = await api.get('/api/v1/etl/pipelines');
+      const response = await api.get('/api/v1/etl/pipelines?organization_id=1');
       setPipelines(response.data);
     } catch (err) {
       setError('Failed to fetch pipelines');
@@ -70,7 +70,7 @@ const ETLPipeline: React.FC = () => {
 
   const fetchDataSources = async () => {
     try {
-      const response = await api.get('/api/v1/data-sources');
+      const response = await api.get('/api/v1/data-sources?organization_id=1');
       setDataSources(response.data);
     } catch (err) {
       setError('Failed to fetch data sources');
