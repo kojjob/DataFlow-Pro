@@ -243,63 +243,121 @@ const ETLPipeline: React.FC = () => {
 
   if (pipelines.length === 0 && !error) {
     return (
-      <div className="text-center py-8">
-        <p>No ETL pipelines configured</p>
-        <p>Create your first pipeline</p>
-        <button
-          onClick={() => setShowCreateModal(true)}
-          className="btn btn-primary mt-4"
-        >
-          Create Pipeline
-        </button>
+      <div className="flex flex-col items-center justify-center min-h-[400px] text-center">
+        <div className="bg-white rounded-xl shadow-lg p-8 max-w-md mx-auto">
+          <div className="mb-6">
+            <svg className="mx-auto h-16 w-16 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+            </svg>
+          </div>
+          <h3 className="text-xl font-semibold text-gray-900 mb-2">No ETL pipelines configured</h3>
+          <p className="text-gray-600 mb-6">Create your first pipeline to start processing data</p>
+          <button
+            onClick={() => setShowCreateModal(true)}
+            className="px-6 py-3 bg-gradient-to-r from-purple-600 to-blue-600 text-white font-medium rounded-lg hover:from-purple-700 hover:to-blue-700 transition-all duration-200 shadow-lg hover:shadow-xl"
+          >
+            Create Pipeline
+          </button>
+        </div>
       </div>
     );
   }
 
   return (
-    <div className="etl-pipeline-container">
-      {error && <div className="alert alert-error">{error}</div>}
-      {success && <div className="alert alert-success">{success}</div>}
+    <div className="p-6">
+      {error && (
+        <div className="mb-4 p-4 bg-red-100 border border-red-400 text-red-700 rounded-lg">
+          {error}
+        </div>
+      )}
+      {success && (
+        <div className="mb-4 p-4 bg-green-100 border border-green-400 text-green-700 rounded-lg">
+          {success}
+        </div>
+      )}
 
-      <div className="flex justify-between mb-4">
-        <h2>ETL Pipelines</h2>
+      <div className="flex justify-between items-center mb-6">
+        <h2 className="text-3xl font-bold text-gray-800">ETL Pipelines</h2>
         <button
           onClick={() => setShowCreateModal(true)}
-          className="btn btn-primary"
+          className="px-6 py-3 bg-gradient-to-r from-purple-600 to-blue-600 text-white font-medium rounded-lg hover:from-purple-700 hover:to-blue-700 transition-all duration-200 shadow-lg hover:shadow-xl"
           role="button"
         >
           Create Pipeline
         </button>
       </div>
 
-      <div className="pipeline-list">
+      <div className="grid gap-4">
         {pipelines.map(pipeline => (
-          <div key={pipeline.id} className="pipeline-item border p-4 mb-2 rounded">
-            <h3>{pipeline.name}</h3>
-            <div data-testid={`status-${pipeline.status}`}>{pipeline.status}</div>
-            <div className="flex gap-2 mt-2">
-              <button onClick={() => handleRunPipeline(pipeline.id)} role="button">
+          <div key={pipeline.id} className="bg-white rounded-xl shadow-md hover:shadow-lg transition-shadow duration-200 p-6 border border-gray-100">
+            <div className="flex justify-between items-start mb-4">
+              <div>
+                <h3 className="text-xl font-semibold text-gray-800">{pipeline.name}</h3>
+                <div className="mt-2">
+                  <span
+                    data-testid={`status-${pipeline.status}`}
+                    className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-medium ${
+                      pipeline.status === 'active'
+                        ? 'bg-green-100 text-green-800'
+                        : 'bg-gray-100 text-gray-800'
+                    }`}
+                  >
+                    {pipeline.status}
+                  </span>
+                </div>
+              </div>
+            </div>
+            <div className="flex flex-wrap gap-2">
+              <button
+                onClick={() => handleRunPipeline(pipeline.id)}
+                className="px-4 py-2 bg-blue-500 text-white text-sm font-medium rounded-lg hover:bg-blue-600 transition-colors"
+                role="button"
+              >
                 Run Now
               </button>
               {pipeline.status === 'active' ? (
-                <button onClick={() => handlePausePipeline(pipeline.id)} role="button">
+                <button
+                  onClick={() => handlePausePipeline(pipeline.id)}
+                  className="px-4 py-2 bg-yellow-500 text-white text-sm font-medium rounded-lg hover:bg-yellow-600 transition-colors"
+                  role="button"
+                >
                   Pause
                 </button>
               ) : (
-                <button onClick={() => handleResumePipeline(pipeline.id)} role="button">
+                <button
+                  onClick={() => handleResumePipeline(pipeline.id)}
+                  className="px-4 py-2 bg-green-500 text-white text-sm font-medium rounded-lg hover:bg-green-600 transition-colors"
+                  role="button"
+                >
                   Resume
                 </button>
               )}
-              <button onClick={() => openEditModal(pipeline)} role="button">
+              <button
+                onClick={() => openEditModal(pipeline)}
+                className="px-4 py-2 bg-gray-500 text-white text-sm font-medium rounded-lg hover:bg-gray-600 transition-colors"
+                role="button"
+              >
                 Edit
               </button>
-              <button onClick={() => openDeleteConfirm(pipeline)} role="button">
+              <button
+                onClick={() => openDeleteConfirm(pipeline)}
+                className="px-4 py-2 bg-red-500 text-white text-sm font-medium rounded-lg hover:bg-red-600 transition-colors"
+                role="button"
+              >
                 Delete
               </button>
-              <button onClick={() => openRunsModal(pipeline)} role="button">
+              <button
+                onClick={() => openRunsModal(pipeline)}
+                className="px-4 py-2 bg-purple-500 text-white text-sm font-medium rounded-lg hover:bg-purple-600 transition-colors"
+                role="button"
+              >
                 View Runs
               </button>
-              <button onClick={() => openRulesModal(pipeline)} role="button">
+              <button
+                onClick={() => openRulesModal(pipeline)}
+                className="px-4 py-2 bg-indigo-500 text-white text-sm font-medium rounded-lg hover:bg-indigo-600 transition-colors"
+                role="button"
+              >
                 Configure Rules
               </button>
             </div>
@@ -309,27 +367,36 @@ const ETLPipeline: React.FC = () => {
 
       {/* Create Modal */}
       {showCreateModal && (
-        <div className="modal">
-          <div className="modal-content">
-            <h3>Create New ETL Pipeline</h3>
-            <div>
-              <label htmlFor="pipeline-name">Pipeline Name</label>
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+          <div className="bg-white rounded-xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+            <div className="p-6 border-b border-gray-200">
+              <h3 className="text-2xl font-bold text-gray-900">Create New ETL Pipeline</h3>
+            </div>
+            <div className="p-6 space-y-4">
+              <label htmlFor="pipeline-name" className="block text-sm font-medium text-gray-700 mb-1">
+                Pipeline Name
+              </label>
               <input
                 id="pipeline-name"
                 type="text"
                 value={formData.name}
                 onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none transition-all"
+                placeholder="Enter pipeline name"
               />
               {validationErrors.name && (
-                <div className="error">{validationErrors.name}</div>
+                <p className="mt-1 text-sm text-red-600">{validationErrors.name}</p>
               )}
             </div>
             <div>
-              <label htmlFor="data-source">Data Source</label>
+              <label htmlFor="data-source" className="block text-sm font-medium text-gray-700 mb-1">
+                Data Source
+              </label>
               <select
                 id="data-source"
                 value={formData.source_id}
                 onChange={(e) => setFormData({ ...formData, source_id: e.target.value })}
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none transition-all bg-white"
               >
                 <option value="">Select a source</option>
                 {dataSources.map(source => (
@@ -339,38 +406,65 @@ const ETLPipeline: React.FC = () => {
                 ))}
               </select>
               {validationErrors.source_id && (
-                <div className="error">{validationErrors.source_id}</div>
+                <p className="mt-1 text-sm text-red-600">{validationErrors.source_id}</p>
               )}
             </div>
             <div>
-              <label htmlFor="schedule">Schedule</label>
+              <label htmlFor="schedule" className="block text-sm font-medium text-gray-700 mb-1">
+                Schedule (Cron Expression)
+              </label>
               <input
                 id="schedule"
                 type="text"
                 value={formData.schedule}
                 onChange={(e) => setFormData({ ...formData, schedule: e.target.value })}
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none transition-all"
+                placeholder="e.g., 0 */6 * * *"
               />
-              <div className="schedule-presets">
-                <button onClick={() => setSchedulePreset('0 * * * *')}>
+              <div className="mt-3 flex flex-wrap gap-2">
+                <button
+                  onClick={() => setSchedulePreset('0 * * * *')}
+                  className="px-3 py-1 bg-gray-100 hover:bg-gray-200 text-gray-700 text-sm rounded-md transition-colors"
+                  type="button"
+                >
                   Every Hour
                 </button>
-                <button onClick={() => setSchedulePreset('0 */6 * * *')}>
+                <button
+                  onClick={() => setSchedulePreset('0 */6 * * *')}
+                  className="px-3 py-1 bg-gray-100 hover:bg-gray-200 text-gray-700 text-sm rounded-md transition-colors"
+                  type="button"
+                >
                   Every 6 Hours
                 </button>
-                <button onClick={() => setSchedulePreset('0 0 * * *')}>
+                <button
+                  onClick={() => setSchedulePreset('0 0 * * *')}
+                  className="px-3 py-1 bg-gray-100 hover:bg-gray-200 text-gray-700 text-sm rounded-md transition-colors"
+                  type="button"
+                >
                   Daily at Midnight
                 </button>
-                <button onClick={() => setSchedulePreset('0 0 * * 0')}>
+                <button
+                  onClick={() => setSchedulePreset('0 0 * * 0')}
+                  className="px-3 py-1 bg-gray-100 hover:bg-gray-200 text-gray-700 text-sm rounded-md transition-colors"
+                  type="button"
+                >
                   Weekly
                 </button>
               </div>
             </div>
-            <div className="flex gap-2">
-              <button onClick={handleCreatePipeline} role="button">
-                Save Pipeline
-              </button>
-              <button onClick={() => { setShowCreateModal(false); resetForm(); }}>
+            <div className="flex justify-end gap-3 pt-4 border-t border-gray-200">
+              <button
+                onClick={() => { setShowCreateModal(false); resetForm(); }}
+                className="px-6 py-2 bg-gray-200 text-gray-700 font-medium rounded-lg hover:bg-gray-300 transition-colors"
+              >
                 Cancel
+              </button>
+              <button
+                onClick={handleCreatePipeline}
+                className="px-6 py-2 bg-gradient-to-r from-purple-600 to-blue-600 text-white font-medium rounded-lg hover:from-purple-700 hover:to-blue-700 transition-all duration-200"
+                role="button"
+              >
+                Save Pipeline
               </button>
             </div>
           </div>
@@ -379,34 +473,51 @@ const ETLPipeline: React.FC = () => {
 
       {/* Edit Modal */}
       {showEditModal && (
-        <div className="modal">
-          <div className="modal-content">
-            <h3>Edit Pipeline</h3>
-            <div>
-              <label htmlFor="pipeline-name">Pipeline Name</label>
-              <input
-                id="pipeline-name"
-                type="text"
-                value={formData.name}
-                onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-              />
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+          <div className="bg-white rounded-xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+            <div className="p-6 border-b border-gray-200">
+              <h3 className="text-2xl font-bold text-gray-900">Edit Pipeline</h3>
             </div>
-            <div>
-              <label htmlFor="schedule">Schedule</label>
-              <input
-                id="schedule"
-                type="text"
-                value={formData.schedule}
-                onChange={(e) => setFormData({ ...formData, schedule: e.target.value })}
-              />
-            </div>
-            <div className="flex gap-2">
-              <button onClick={handleUpdatePipeline} role="button">
-                Save Changes
-              </button>
-              <button onClick={() => { setShowEditModal(false); resetForm(); }}>
-                Cancel
-              </button>
+            <div className="p-6 space-y-4">
+              <div>
+                <label htmlFor="edit-pipeline-name" className="block text-sm font-medium text-gray-700 mb-1">
+                  Pipeline Name
+                </label>
+                <input
+                  id="edit-pipeline-name"
+                  type="text"
+                  value={formData.name}
+                  onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none transition-all"
+                />
+              </div>
+              <div>
+                <label htmlFor="edit-schedule" className="block text-sm font-medium text-gray-700 mb-1">
+                  Schedule
+                </label>
+                <input
+                  id="edit-schedule"
+                  type="text"
+                  value={formData.schedule}
+                  onChange={(e) => setFormData({ ...formData, schedule: e.target.value })}
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none transition-all"
+                />
+              </div>
+              <div className="flex justify-end gap-3 pt-4 border-t border-gray-200">
+                <button
+                  onClick={() => { setShowEditModal(false); resetForm(); }}
+                  className="px-6 py-2 bg-gray-200 text-gray-700 font-medium rounded-lg hover:bg-gray-300 transition-colors"
+                >
+                  Cancel
+                </button>
+                <button
+                  onClick={handleUpdatePipeline}
+                  className="px-6 py-2 bg-gradient-to-r from-purple-600 to-blue-600 text-white font-medium rounded-lg hover:from-purple-700 hover:to-blue-700 transition-all duration-200"
+                  role="button"
+                >
+                  Save Changes
+                </button>
+              </div>
             </div>
           </div>
         </div>
@@ -414,51 +525,134 @@ const ETLPipeline: React.FC = () => {
 
       {/* Runs Modal */}
       {showRunsModal && (
-        <div className="modal">
-          <div className="modal-content">
-            <h3>Pipeline Run History</h3>
-            {pipelineRuns.map(run => (
-              <div key={run.run_id}>
-                <div>{run.run_id}</div>
-                <div data-testid={`run-status-${run.status}`}>{run.status}</div>
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+          <div className="bg-white rounded-xl shadow-2xl max-w-4xl w-full max-h-[90vh] overflow-y-auto">
+            <div className="p-6 border-b border-gray-200">
+              <h3 className="text-2xl font-bold text-gray-900">Pipeline Run History</h3>
+            </div>
+            <div className="p-6">
+              <div className="space-y-3">
+                {pipelineRuns.map(run => (
+                  <div key={run.run_id} className="bg-gray-50 rounded-lg p-4 border border-gray-200">
+                    <div className="flex justify-between items-center">
+                      <div className="font-mono text-sm text-gray-600">{run.run_id}</div>
+                      <span
+                        data-testid={`run-status-${run.status}`}
+                        className={`px-3 py-1 rounded-full text-sm font-medium ${
+                          run.status === 'completed'
+                            ? 'bg-green-100 text-green-800'
+                            : run.status === 'running'
+                            ? 'bg-blue-100 text-blue-800'
+                            : run.status === 'failed'
+                            ? 'bg-red-100 text-red-800'
+                            : 'bg-gray-100 text-gray-800'
+                        }`}
+                      >
+                        {run.status}
+                      </span>
+                    </div>
+                  </div>
+                ))}
               </div>
-            ))}
-            <button onClick={() => setShowRunsModal(false)}>Close</button>
+              <div className="flex justify-end mt-6">
+                <button
+                  onClick={() => setShowRunsModal(false)}
+                  className="px-6 py-2 bg-gray-200 text-gray-700 font-medium rounded-lg hover:bg-gray-300 transition-colors"
+                >
+                  Close
+                </button>
+              </div>
+            </div>
           </div>
         </div>
       )}
 
       {/* Rules Modal */}
       {showRulesModal && (
-        <div className="modal">
-          <div className="modal-content">
-            <h3>Transformation Rules</h3>
-            <div>Field Mapping</div>
-            <div>Filters</div>
-            <button onClick={addFieldMapping} role="button">
-              Add Mapping
-            </button>
-            <div className="mapping-fields">
-              <input placeholder="Source Field" />
-              <input placeholder="Target Field" />
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+          <div className="bg-white rounded-xl shadow-2xl max-w-3xl w-full max-h-[90vh] overflow-y-auto">
+            <div className="p-6 border-b border-gray-200">
+              <h3 className="text-2xl font-bold text-gray-900">Transformation Rules</h3>
             </div>
-            <button onClick={handleValidateRules} role="button">
-              Validate Rules
-            </button>
-            <button onClick={() => setShowRulesModal(false)}>Close</button>
+            <div className="p-6">
+              <div className="mb-6">
+                <h4 className="text-lg font-semibold text-gray-800 mb-3">Field Mapping</h4>
+                <button
+                  onClick={addFieldMapping}
+                  className="mb-3 px-4 py-2 bg-blue-500 text-white text-sm font-medium rounded-lg hover:bg-blue-600 transition-colors"
+                  role="button"
+                >
+                  Add Mapping
+                </button>
+                <div className="space-y-2">
+                  <div className="flex gap-2">
+                    <input
+                      placeholder="Source Field"
+                      className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none transition-all"
+                    />
+                    <input
+                      placeholder="Target Field"
+                      className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none transition-all"
+                    />
+                  </div>
+                </div>
+              </div>
+              <div className="mb-6">
+                <h4 className="text-lg font-semibold text-gray-800 mb-3">Filters</h4>
+                <p className="text-gray-600">Configure data filtering rules</p>
+              </div>
+              <div className="flex justify-between pt-4 border-t border-gray-200">
+                <button
+                  onClick={handleValidateRules}
+                  className="px-6 py-2 bg-green-500 text-white font-medium rounded-lg hover:bg-green-600 transition-colors"
+                  role="button"
+                >
+                  Validate Rules
+                </button>
+                <button
+                  onClick={() => setShowRulesModal(false)}
+                  className="px-6 py-2 bg-gray-200 text-gray-700 font-medium rounded-lg hover:bg-gray-300 transition-colors"
+                >
+                  Close
+                </button>
+              </div>
+            </div>
           </div>
         </div>
       )}
 
       {/* Delete Confirmation */}
       {showDeleteConfirm && (
-        <div className="modal">
-          <div className="modal-content">
-            <p>Are you sure you want to delete this pipeline?</p>
-            <button onClick={handleDeletePipeline} role="button">
-              Confirm Delete
-            </button>
-            <button onClick={() => setShowDeleteConfirm(false)}>Cancel</button>
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+          <div className="bg-white rounded-xl shadow-2xl max-w-md w-full">
+            <div className="p-6">
+              <div className="flex items-center justify-center mb-4">
+                <svg className="h-12 w-12 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                </svg>
+              </div>
+              <h3 className="text-xl font-bold text-center text-gray-900 mb-2">
+                Delete Pipeline?
+              </h3>
+              <p className="text-center text-gray-600 mb-6">
+                Are you sure you want to delete this pipeline? This action cannot be undone.
+              </p>
+              <div className="flex gap-3">
+                <button
+                  onClick={() => setShowDeleteConfirm(false)}
+                  className="flex-1 px-4 py-2 bg-gray-200 text-gray-700 font-medium rounded-lg hover:bg-gray-300 transition-colors"
+                >
+                  Cancel
+                </button>
+                <button
+                  onClick={handleDeletePipeline}
+                  className="flex-1 px-4 py-2 bg-red-500 text-white font-medium rounded-lg hover:bg-red-600 transition-colors"
+                  role="button"
+                >
+                  Confirm Delete
+                </button>
+              </div>
+            </div>
           </div>
         </div>
       )}
