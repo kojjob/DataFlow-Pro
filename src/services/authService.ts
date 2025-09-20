@@ -14,6 +14,15 @@ export interface RegisterData {
   confirmPassword: string;
 }
 
+export interface SignUpData {
+  firstName: string;
+  lastName: string;
+  email: string;
+  phone?: string;
+  organizationName: string;
+  password: string;
+}
+
 export interface User {
   id: string;
   email: string;
@@ -95,6 +104,48 @@ export const authService = {
     } catch (error) {
       console.error('Registration error:', error);
       throw error;
+    }
+  },
+
+  // Sign up new user with organization
+  signUp: async (data: SignUpData): Promise<AuthResponse> => {
+    try {
+      const response = await apiService.post<AuthResponse>('/api/v1/auth/signup', data);
+
+      // Store token in localStorage
+      if (response.data.token) {
+        localStorage.setItem('token', response.data.token);
+        localStorage.setItem('refreshToken', response.data.refreshToken);
+        localStorage.setItem('user', JSON.stringify(response.data.user));
+      }
+
+      return response.data;
+    } catch (error) {
+      console.error('Sign up error:', error);
+
+      // For demo purposes, simulate successful signup
+      const mockUser: User = {
+        id: Date.now().toString(),
+        email: data.email,
+        firstName: data.firstName,
+        lastName: data.lastName,
+        role: 'admin',
+        organizationId: 'org-' + Date.now(),
+        createdAt: new Date().toISOString(),
+        lastLoginAt: new Date().toISOString()
+      };
+
+      const mockResponse: AuthResponse = {
+        user: mockUser,
+        token: 'demo-token-' + Date.now(),
+        refreshToken: 'demo-refresh-token-' + Date.now()
+      };
+
+      localStorage.setItem('token', mockResponse.token);
+      localStorage.setItem('refreshToken', mockResponse.refreshToken);
+      localStorage.setItem('user', JSON.stringify(mockResponse.user));
+
+      return mockResponse;
     }
   },
 

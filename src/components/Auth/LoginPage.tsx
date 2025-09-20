@@ -328,7 +328,9 @@ const LoginPage: React.FC = () => {
                 <Typography variant="body2" color="text.secondary">
                   Don't have an account?{' '}
                   <Link
-                    href="#"
+                    component="button"
+                    variant="body2"
+                    onClick={() => navigate('/signup')}
                     sx={{
                       color: '#667eea',
                       textDecoration: 'none',

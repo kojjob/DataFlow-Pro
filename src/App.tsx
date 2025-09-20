@@ -6,8 +6,13 @@ import './App.css';
 import AppLayout from './components/Navigation/AppLayout';
 import Dashboard from './components/Dashboard/Dashboard';
 import LoginPage from './components/Auth/LoginPage';
+import SignUpPage from './components/Auth/SignUpPage';
 import DataSources from './components/DataSources';
 import ETLPipeline from './components/ETLPipeline/ETLPipeline';
+import AIInsights from './components/AIInsights/AIInsights';
+import Analytics from './components/Analytics/Analytics';
+import TeamWorkspace from './components/TeamWorkspace/TeamWorkspace';
+import FileUpload from './components/FileUpload/FileUpload';
 import { authService } from './services/authService';
 
 // Create a custom theme
@@ -86,8 +91,9 @@ function App() {
           {/* Landing page redirect */}
           <Route path="/" element={<Navigate to="/dashboard" replace />} />
 
-          {/* Login Route */}
+          {/* Authentication Routes */}
           <Route path="/login" element={<LoginPage />} />
+          <Route path="/signup" element={<SignUpPage />} />
 
           {/* Protected Routes with Layout */}
           <Route
@@ -104,15 +110,15 @@ function App() {
           />
 
           {/* Other routes - placeholder for now */}
-          <Route path="/analytics" element={<AppLayout><Dashboard /></AppLayout>} />
-          <Route path="/insights" element={<AppLayout><Dashboard /></AppLayout>} />
+          <Route path="/analytics" element={<AppLayout><Analytics /></AppLayout>} />
+          <Route path="/insights" element={<AppLayout><AIInsights /></AppLayout>} />
           <Route path="/sources" element={<AppLayout><DataSources /></AppLayout>} />
           <Route path="/etl" element={<AppLayout><ETLPipeline /></AppLayout>} />
-          <Route path="/upload" element={<AppLayout><Dashboard /></AppLayout>} />
+          <Route path="/upload" element={<AppLayout><FileUpload /></AppLayout>} />
           <Route path="/performance" element={<AppLayout><Dashboard /></AppLayout>} />
           <Route path="/predictive" element={<AppLayout><Dashboard /></AppLayout>} />
           <Route path="/reports" element={<AppLayout><Dashboard /></AppLayout>} />
-          <Route path="/team" element={<AppLayout><Dashboard /></AppLayout>} />
+          <Route path="/team" element={<AppLayout><TeamWorkspace /></AppLayout>} />
           <Route path="/settings" element={<AppLayout><Dashboard /></AppLayout>} />
 
           {/* Catch all route */}
