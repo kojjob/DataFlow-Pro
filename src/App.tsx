@@ -6,6 +6,8 @@ import './App.css';
 import AppLayout from './components/Navigation/AppLayout';
 import Dashboard from './components/Dashboard/Dashboard';
 import LoginPage from './components/Auth/LoginPage';
+import DataSources from './components/DataSources';
+import ETLPipeline from './components/ETLPipeline/ETLPipeline';
 import { authService } from './services/authService';
 
 // Create a custom theme
@@ -104,8 +106,8 @@ function App() {
           {/* Other routes - placeholder for now */}
           <Route path="/analytics" element={<AppLayout><Dashboard /></AppLayout>} />
           <Route path="/insights" element={<AppLayout><Dashboard /></AppLayout>} />
-          <Route path="/sources" element={<AppLayout><Dashboard /></AppLayout>} />
-          <Route path="/etl" element={<AppLayout><Dashboard /></AppLayout>} />
+          <Route path="/sources" element={<AppLayout><DataSources /></AppLayout>} />
+          <Route path="/etl" element={<AppLayout><ETLPipeline /></AppLayout>} />
           <Route path="/upload" element={<AppLayout><Dashboard /></AppLayout>} />
           <Route path="/performance" element={<AppLayout><Dashboard /></AppLayout>} />
           <Route path="/predictive" element={<AppLayout><Dashboard /></AppLayout>} />
