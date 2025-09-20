@@ -153,10 +153,10 @@ describe('ETLPipeline Component', () => {
     test('creates new pipeline successfully', async () => {
       mockedApi.post.mockResolvedValueOnce({
         data: {
+          ...mockPipelines[0],
           id: 3,
           name: 'New Test Pipeline',
-          status: 'active',
-          ...mockPipelines[0]
+          status: 'active'
         }
       });
 
