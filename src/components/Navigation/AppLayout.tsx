@@ -19,6 +19,7 @@ import {
   Chip,
   Button
 } from '@mui/material';
+import { useAuth } from '../../contexts/AuthContext';
 import {
   Dashboard as DashboardIcon,
   Analytics,
@@ -51,6 +52,7 @@ const AppLayout: React.FC<AppLayoutProps> = ({ children }) => {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const [notificationAnchor, setNotificationAnchor] = useState<null | HTMLElement>(null);
   const navigate = useNavigate();
+  const { user, logout } = useAuth();
 
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
@@ -303,7 +305,7 @@ const AppLayout: React.FC<AppLayoutProps> = ({ children }) => {
                 height: 35
               }}
             >
-              JD
+              {user?.full_name ? user.full_name.split(' ').map(n => n[0]).join('').toUpperCase() : 'U'}
             </Avatar>
           </IconButton>
         </Toolbar>
@@ -373,13 +375,13 @@ const AppLayout: React.FC<AppLayoutProps> = ({ children }) => {
       >
         <Box sx={{ px: 2, py: 1.5 }}>
           <Typography variant="subtitle1" sx={{ fontWeight: 'bold' }}>
-            John Doe
+            {user?.full_name || user?.username || 'User'}
           </Typography>
           <Typography variant="body2" color="text.secondary">
-            john.doe@dataflow.com
+            {user?.email || 'user@example.com'}
           </Typography>
           <Chip
-            label="Admin"
+            label={user?.role === 'admin' ? 'Admin' : 'User'}
             size="small"
             sx={{ mt: 1, bgcolor: '#667eea', color: 'white' }}
           />
@@ -400,7 +402,7 @@ const AppLayout: React.FC<AppLayoutProps> = ({ children }) => {
         <Divider />
         <MenuItem onClick={async () => {
           handleMenuClose();
-          await authService.logout();
+          await logout();
           navigate('/login');
         }}>
           <ListItemIcon>

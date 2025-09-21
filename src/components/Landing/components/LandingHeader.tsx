@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Menu, X } from 'lucide-react';
 
@@ -7,6 +7,7 @@ const LandingHeader: React.FC = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const navigate = useNavigate();
+  const location = useLocation();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -17,12 +18,25 @@ const LandingHeader: React.FC = () => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  const scrollToSection = (sectionId: string) => {
-    const element = document.getElementById(sectionId);
-    if (element) {
-      element.scrollIntoView({ behavior: 'smooth' });
-      setIsMobileMenuOpen(false);
+  const handleNavClick = (sectionId: string) => {
+    if (location.pathname !== '/') {
+      // If not on landing page, navigate to landing page first
+      navigate('/');
+      // Use setTimeout to wait for navigation to complete
+      setTimeout(() => {
+        const element = document.getElementById(sectionId);
+        if (element) {
+          element.scrollIntoView({ behavior: 'smooth' });
+        }
+      }, 100);
+    } else {
+      // If already on landing page, just scroll
+      const element = document.getElementById(sectionId);
+      if (element) {
+        element.scrollIntoView({ behavior: 'smooth' });
+      }
     }
+    setIsMobileMenuOpen(false);
   };
 
   return (
@@ -50,7 +64,7 @@ const LandingHeader: React.FC = () => {
           {/* Desktop Navigation */}
           <div className="hidden md:flex items-center space-x-8">
             <button
-              onClick={() => scrollToSection('features')}
+              onClick={() => handleNavClick('features')}
               className={`font-medium transition-colors ${
                 isScrolled ? 'text-gray-700 hover:text-indigo-800' : 'text-gray-800 hover:text-indigo-800'
               }`}
@@ -58,7 +72,7 @@ const LandingHeader: React.FC = () => {
               Features
             </button>
             <button
-              onClick={() => scrollToSection('pricing')}
+              onClick={() => handleNavClick('pricing')}
               className={`font-medium transition-colors ${
                 isScrolled ? 'text-gray-700 hover:text-indigo-800' : 'text-gray-800 hover:text-indigo-800'
               }`}
@@ -66,7 +80,7 @@ const LandingHeader: React.FC = () => {
               Pricing
             </button>
             <button
-              onClick={() => scrollToSection('testimonials')}
+              onClick={() => handleNavClick('testimonials')}
               className={`font-medium transition-colors ${
                 isScrolled ? 'text-gray-700 hover:text-indigo-800' : 'text-gray-800 hover:text-indigo-800'
               }`}
@@ -134,19 +148,19 @@ const LandingHeader: React.FC = () => {
           >
             <div className="flex flex-col space-y-4">
               <button
-                onClick={() => scrollToSection('features')}
+                onClick={() => handleNavClick('features')}
                 className="text-left py-2 text-gray-700 hover:text-indigo-800 font-medium"
               >
                 Features
               </button>
               <button
-                onClick={() => scrollToSection('pricing')}
+                onClick={() => handleNavClick('pricing')}
                 className="text-left py-2 text-gray-700 hover:text-indigo-800 font-medium"
               >
                 Pricing
               </button>
               <button
-                onClick={() => scrollToSection('testimonials')}
+                onClick={() => handleNavClick('testimonials')}
                 className="text-left py-2 text-gray-700 hover:text-indigo-800 font-medium"
               >
                 Testimonials

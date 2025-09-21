@@ -106,12 +106,15 @@ const DataSources: React.FC = () => {
       const response = await apiService.post(`/api/v1/data-sources/${dataSourceId}/test-connection`);
 
       if (response.data.status === 'success') {
-        alert('Successfully connected to ' + response.data.message);
+        // The backend already includes the full success message
+        alert(response.data.message);
       } else {
-        alert('Connection failed: ' + response.data.message);
+        alert('Connection failed: ' + (response.data.message || 'Unknown error'));
       }
-    } catch (err) {
-      alert('Connection failed: Unable to test connection');
+    } catch (err: any) {
+      // More detailed error handling
+      const errorMessage = err.response?.data?.detail || err.message || 'Unable to test connection';
+      alert('Connection failed: ' + errorMessage);
       console.error('Connection test error:', err);
     } finally {
       setTestingConnection(null);
@@ -124,8 +127,9 @@ const DataSources: React.FC = () => {
       alert('Data source deleted successfully');
       fetchDataSources(); // Refresh the list
       setDeleteConfirm(null);
-    } catch (err) {
-      alert('Failed to delete data source');
+    } catch (err: any) {
+      const errorMessage = err.response?.data?.detail || err.message || 'Failed to delete data source';
+      alert(errorMessage);
       console.error('Delete error:', err);
     }
   };
@@ -135,8 +139,9 @@ const DataSources: React.FC = () => {
       await apiService.post(`/api/v1/data-sources/${dataSourceId}/refresh-token`);
       alert('Token refreshed successfully');
       fetchDataSources(); // Refresh the list
-    } catch (err) {
-      alert('Failed to refresh token');
+    } catch (err: any) {
+      const errorMessage = err.response?.data?.detail || err.message || 'Failed to refresh token';
+      alert(errorMessage);
       console.error('Token refresh error:', err);
     }
   };
@@ -145,8 +150,9 @@ const DataSources: React.FC = () => {
     try {
       await apiService.put(`/api/v1/data-sources/${dataSourceId}/status`, { status: newStatus });
       fetchDataSources(); // Refresh the list
-    } catch (err) {
-      alert('Failed to update status');
+    } catch (err: any) {
+      const errorMessage = err.response?.data?.detail || err.message || 'Failed to update status';
+      alert(errorMessage);
       console.error('Status update error:', err);
     }
   };

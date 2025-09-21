@@ -6,6 +6,7 @@ import CircularProgress from '@mui/material/CircularProgress';
 import Box from '@mui/material/Box';
 import './App.css';
 import { authService } from './services/authService';
+import { AuthProvider } from './contexts/AuthContext';
 
 // Eagerly loaded components (used immediately)
 import AppLayout from './components/Navigation/AppLayout';
@@ -13,13 +14,16 @@ import LoginPage from './components/Auth/LoginPage';
 import SignUpPage from './components/Auth/SignUpPage';
 
 // Lazy loaded components (loaded on demand)
+const LandingPage = React.lazy(() => import('./components/Landing/LandingPage'));
 const Dashboard = React.lazy(() => import('./components/Dashboard/Dashboard'));
 const DataSources = React.lazy(() => import('./components/DataSources'));
 const ETLPipeline = React.lazy(() => import('./components/ETLPipeline/ETLPipeline'));
 const AIInsights = React.lazy(() => import('./components/AIInsights/AIInsights'));
 const Analytics = React.lazy(() => import('./components/Analytics/Analytics'));
 const TeamWorkspace = React.lazy(() => import('./components/TeamWorkspace/TeamWorkspace'));
-const FileUpload = React.lazy(() => import('./components/FileUpload/FileUpload'));
+const FileUpload = React.lazy(() => import('./components/FileUpload/EnhancedFileUpload'));
+const AboutPage = React.lazy(() => import('./components/About/AboutPage'));
+const ContactPage = React.lazy(() => import('./components/Contact/ContactPage'));
 
 // Create a custom theme
 const theme = createTheme({
@@ -104,11 +108,16 @@ function App() {
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
-      <Router>
-        <Suspense fallback={<LoadingFallback />}>
-          <Routes>
-          {/* Landing page redirect */}
-          <Route path="/" element={<Navigate to="/dashboard" replace />} />
+      <AuthProvider>
+        <Router>
+          <Suspense fallback={<LoadingFallback />}>
+            <Routes>
+          {/* Landing page - public route */}
+          <Route path="/" element={<LandingPage />} />
+
+          {/* Public pages */}
+          <Route path="/about" element={<AboutPage />} />
+          <Route path="/contact" element={<ContactPage />} />
 
           {/* Authentication Routes */}
           <Route path="/login" element={<LoginPage />} />
@@ -142,9 +151,10 @@ function App() {
 
           {/* Catch all route */}
           <Route path="*" element={<Navigate to="/dashboard" replace />} />
-        </Routes>
-        </Suspense>
-      </Router>
+            </Routes>
+          </Suspense>
+        </Router>
+      </AuthProvider>
     </ThemeProvider>
   );
 }

@@ -29,33 +29,55 @@ export const uploadService = {
     const formData = new FormData();
     formData.append('file', file);
 
+    console.log('Starting file upload:', {
+      fileName: file.name,
+      fileSize: file.size,
+      fileType: file.type,
+      baseURL: process.env.REACT_APP_API_URL || 'http://localhost:8000'
+    });
+
     try {
-      const response = await apiService.post<any>('/api/v1/upload', formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
-        onUploadProgress: (progressEvent: { loaded: number; total: number }) => {
-          if (options?.onProgress && progressEvent.total) {
-            const progress: UploadProgress = {
-              loaded: progressEvent.loaded,
-              total: progressEvent.total,
-              percentage: Math.round((progressEvent.loaded * 100) / progressEvent.total),
-            };
-            options.onProgress(progress);
-          }
-        },
+      const baseURL = process.env.REACT_APP_API_URL || 'http://localhost:8000';
+      const url = `${baseURL}/api/v1/files/upload`;
+
+      console.log('Making POST request to:', url);
+
+      // Use native fetch API instead of axios to avoid any axios-specific issues
+      const response = await fetch(url, {
+        method: 'POST',
+        body: formData,
+        // Don't set Content-Type header - let the browser set it with boundary for multipart
       });
 
-      if (options?.onComplete) {
-        options.onComplete(response.data);
+      console.log('Response status:', response.status);
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
       }
 
-      return response.data;
+      const data = await response.json();
+      console.log('Upload successful:', data);
+
+      // Simulate progress for compatibility
+      if (options?.onProgress) {
+        options.onProgress({
+          loaded: file.size,
+          total: file.size,
+          percentage: 100
+        });
+      }
+
+      if (options?.onComplete) {
+        options.onComplete(data);
+      }
+
+      return data;
     } catch (error: any) {
+      console.error('Upload error:', error);
+
       if (options?.onError) {
         options.onError(error);
       }
-      console.error('Error uploading file:', error);
 
       // Return mock data for development
       return getMockUploadResponse(file);
@@ -71,7 +93,7 @@ export const uploadService = {
   // Get upload history
   getUploadHistory: async (): Promise<UploadedFile[]> => {
     try {
-      const response = await apiService.get<UploadedFile[]>('/api/v1/upload/history');
+      const response = await apiService.get<UploadedFile[]>('/api/v1/files/history');
       return response.data;
     } catch (error) {
       console.error('Error fetching upload history:', error);
@@ -82,7 +104,7 @@ export const uploadService = {
   // Download a previously uploaded file
   downloadFile: async (fileId: string): Promise<Blob> => {
     try {
-      const response = await apiService.get<Blob>(`/api/v1/upload/download/${fileId}`, {
+      const response = await apiService.get<Blob>(`/api/v1/files/download/${fileId}`, {
         responseType: 'blob',
       });
       return response.data;
@@ -96,7 +118,7 @@ export const uploadService = {
   // Delete an uploaded file
   deleteFile: async (fileId: string): Promise<{ success: boolean }> => {
     try {
-      const response = await apiService.delete<{ success: boolean }>(`/api/v1/upload/${fileId}`);
+      const response = await apiService.delete<{ success: boolean }>(`/api/v1/files/upload/${fileId}`);
       return response.data;
     } catch (error) {
       console.error('Error deleting file:', error);
@@ -166,11 +188,40 @@ export const uploadService = {
   // Get file statistics
   getFileStatistics: async (fileId: string): Promise<any> => {
     try {
-      const response = await apiService.get<any>(`/api/v1/upload/${fileId}/stats`);
+      const response = await apiService.get<any>(`/api/v1/files/upload/${fileId}/stats`);
       return response.data;
     } catch (error) {
       console.error('Error fetching file statistics:', error);
       return getMockFileStatistics();
+    }
+  },
+
+  // Get supported file formats
+  getSupportedFormats: async (): Promise<any> => {
+    try {
+      const response = await apiService.get<any>('/api/v1/files/supported-formats');
+      return response.data;
+    } catch (error) {
+      console.error('Error fetching supported formats:', error);
+      // Return mock data for development
+      return {
+        spreadsheets: {
+          formats: ['csv', 'xlsx', 'xls', 'xlsm', 'xlsb'],
+          description: 'Tabular data with rows and columns',
+        },
+        documents: {
+          formats: ['pdf', 'docx', 'txt', 'md'],
+          description: 'Text documents and reports',
+        },
+        data_formats: {
+          formats: ['json', 'xml', 'yaml', 'toml'],
+          description: 'Structured data formats',
+        },
+        binary_formats: {
+          formats: ['parquet', 'feather', 'hdf', 'pickle'],
+          description: 'Binary data formats',
+        },
+      };
     }
   },
 };

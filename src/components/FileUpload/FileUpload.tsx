@@ -206,7 +206,13 @@ const FileUpload: React.FC = () => {
     );
   };
 
-  const handlePreview = async (file: File) => {
+  const handlePreview = async (file: File | FileWithProgress | undefined | null) => {
+    // Add null/undefined checks
+    if (!file || !file.name) {
+      console.error('Invalid file for preview');
+      return;
+    }
+
     if (file.type === 'text/csv' || file.name.endsWith('.csv')) {
       try {
         const data = await uploadService.parseCSVPreview(file);
@@ -246,7 +252,12 @@ const FileUpload: React.FC = () => {
     }
   };
 
-  const getFileIcon = (file: File) => {
+  const getFileIcon = (file: File | FileWithProgress | undefined | null) => {
+    // Add null/undefined checks
+    if (!file || !file.name) {
+      return <InsertDriveFile />;
+    }
+
     if (file.type === 'text/csv' || file.name.endsWith('.csv')) {
       return <InsertDriveFile color="success" />;
     } else if (file.type === 'application/json' || file.name.endsWith('.json')) {
@@ -259,8 +270,8 @@ const FileUpload: React.FC = () => {
     return <InsertDriveFile />;
   };
 
-  const formatFileSize = (bytes: number) => {
-    if (bytes === 0) return '0 Bytes';
+  const formatFileSize = (bytes: number | undefined) => {
+    if (!bytes || bytes === 0 || isNaN(bytes)) return '0 Bytes';
     const k = 1024;
     const sizes = ['Bytes', 'KB', 'MB', 'GB'];
     const i = Math.floor(Math.log(bytes) / Math.log(k));
