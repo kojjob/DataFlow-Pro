@@ -81,12 +81,12 @@ interface Activity {
   type: 'create' | 'update' | 'delete' | 'comment' | 'share';
 }
 
-interface Comment {
+interface CommentData {
   id: string;
   user: TeamMember;
   content: string;
   timestamp: string;
-  replies?: Comment[];
+  replies?: CommentData[];
 }
 
 const TeamWorkspace: React.FC = () => {
@@ -100,7 +100,7 @@ const TeamWorkspace: React.FC = () => {
   const [projectMenuAnchor, setProjectMenuAnchor] = useState<null | HTMLElement>(null);
   const [searchQuery, setSearchQuery] = useState('');
   const [newComment, setNewComment] = useState('');
-  const [comments, setComments] = useState<Comment[]>([]);
+  const [comments, setComments] = useState<CommentData[]>([]);
 
   // Ref to track timeout for cleanup
   const loadTimeoutRef = useRef<NodeJS.Timeout | null>(null);
@@ -146,7 +146,7 @@ const TeamWorkspace: React.FC = () => {
 
   const handleAddComment = () => {
     if (newComment.trim()) {
-      const comment: Comment = {
+      const comment: CommentData = {
         id: `comment-${Date.now()}`,
         user: teamMembers[0], // Current user
         content: newComment,
@@ -845,7 +845,7 @@ function getMockActivities(): Activity[] {
   ];
 }
 
-function getMockComments(): Comment[] {
+function getMockComments(): CommentData[] {
   const members = getMockTeamMembers();
   return [
     {

@@ -32,6 +32,7 @@ import FinancialChart from './FinancialChart';
 import PerformanceMetrics from './PerformanceMetrics';
 import RevenueChart from './RevenueChart';
 import UserActivityHeatmap from './UserActivityHeatmap';
+import NotificationDemo from '../NotificationDemo';
 import { dashboardService, DashboardMetrics } from '../../services/dashboardService';
 import './Dashboard.css';
 
@@ -628,6 +629,11 @@ const Dashboard: React.FC = () => {
             </Grid>
           </Paper>
         </motion.div>
+      </Box>
+
+      {/* Notification System Demo */}
+      <Box sx={{ mb: 6 }}>
+        <NotificationDemo />
       </Box>
 
       {/* Menu */}

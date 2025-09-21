@@ -5,12 +5,13 @@ import {
   TextField,
   Typography,
   Paper,
-  Alert,
   CircularProgress,
   Link,
   Container,
+  Alert,
 } from '@mui/material';
 import { useAuth } from '../../contexts/AuthContext';
+import { useNotification, NotificationType } from '../../contexts/NotificationContext';
 
 interface LoginProps {
   onSwitchToRegister?: () => void;
@@ -21,10 +22,11 @@ const Login: React.FC<LoginProps> = ({ onSwitchToRegister }) => {
     username: '',
     password: '',
   });
-  const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   const { login } = useAuth();
+  const { showNotification } = useNotification();
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -49,7 +51,7 @@ const Login: React.FC<LoginProps> = ({ onSwitchToRegister }) => {
 
     try {
       await login(formData.username, formData.password);
-      // Login successful - the AuthContext will handle state changes
+      // Login successful - the AuthContext will handle state changes and success notification
       // and TestApp.tsx will automatically show the Dashboard component
     } catch (err: any) {
       console.error('Login error:', err);

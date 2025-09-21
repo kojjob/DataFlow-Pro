@@ -7,6 +7,7 @@ import Box from '@mui/material/Box';
 import './App.css';
 import { authService } from './services/authService';
 import { AuthProvider } from './contexts/AuthContext';
+import { NotificationProvider } from './contexts/NotificationContext';
 
 // Eagerly loaded components (used immediately)
 import AppLayout from './components/Navigation/AppLayout';
@@ -108,10 +109,11 @@ function App() {
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
-      <AuthProvider>
-        <Router>
-          <Suspense fallback={<LoadingFallback />}>
-            <Routes>
+      <NotificationProvider>
+        <AuthProvider>
+          <Router>
+            <Suspense fallback={<LoadingFallback />}>
+              <Routes>
           {/* Landing page - public route */}
           <Route path="/" element={<LandingPage />} />
 
@@ -151,10 +153,11 @@ function App() {
 
           {/* Catch all route */}
           <Route path="*" element={<Navigate to="/dashboard" replace />} />
-            </Routes>
-          </Suspense>
-        </Router>
-      </AuthProvider>
+              </Routes>
+            </Suspense>
+          </Router>
+        </AuthProvider>
+      </NotificationProvider>
     </ThemeProvider>
   );
 }
