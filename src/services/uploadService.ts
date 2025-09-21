@@ -34,7 +34,7 @@ export const uploadService = {
         headers: {
           'Content-Type': 'multipart/form-data',
         },
-        onUploadProgress: (progressEvent: any) => {
+        onUploadProgress: (progressEvent: { loaded: number; total: number }) => {
           if (options?.onProgress && progressEvent.total) {
             const progress: UploadProgress = {
               loaded: progressEvent.loaded,

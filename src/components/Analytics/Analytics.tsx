@@ -7,7 +7,6 @@ import {
   Typography,
   Button,
   CircularProgress,
-  Paper,
   Tabs,
   Tab,
   Select,
@@ -15,7 +14,6 @@ import {
   FormControl,
   InputLabel,
   IconButton,
-  Chip,
   Menu,
   Table,
   TableBody,
@@ -28,26 +26,17 @@ import {
 } from '@mui/material';
 import {
   Refresh,
-  TrendingUp,
-  TrendingDown,
   People,
   AttachMoney,
   ShowChart,
-  PieChart as PieChartIcon,
-  BarChart as BarChartIcon,
   Download,
   ArrowUpward,
   ArrowDownward,
   Timeline,
-  Language,
 } from '@mui/icons-material';
 import {
   LineChart,
   Line,
-  AreaChart,
-  Area,
-  BarChart,
-  Bar,
   PieChart,
   Pie,
   Cell,
@@ -58,7 +47,6 @@ import {
   Legend,
   ResponsiveContainer,
 } from 'recharts';
-import { motion } from 'framer-motion';
 import {
   analyticsService,
   KeyMetrics,

@@ -35,11 +35,11 @@ api.interceptors.response.use(
 );
 
 export const apiService = {
-  get: <T>(url: string, config?: any) => api.get<T>(url, config),
-  post: <T>(url: string, data?: any, config?: any) => api.post<T>(url, data, config),
-  put: <T>(url: string, data?: any, config?: any) => api.put<T>(url, data, config),
-  delete: <T>(url: string, config?: any) => api.delete<T>(url, config),
-  patch: <T>(url: string, data?: any, config?: any) => api.patch<T>(url, data, config),
+  get: <T = any>(url: string, config?: any): Promise<{ data: T }> => api.get<T>(url, config),
+  post: <T = any>(url: string, data?: any, config?: any): Promise<{ data: T }> => api.post<T>(url, data, config),
+  put: <T = any>(url: string, data?: any, config?: any): Promise<{ data: T }> => api.put<T>(url, data, config),
+  delete: <T = any>(url: string, config?: any): Promise<{ data: T }> => api.delete<T>(url, config),
+  patch: <T = any>(url: string, data?: any, config?: any): Promise<{ data: T }> => api.patch<T>(url, data, config),
 };
 
 export default api;

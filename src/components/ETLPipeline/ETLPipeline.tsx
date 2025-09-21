@@ -281,7 +281,6 @@ const ETLPipeline: React.FC = () => {
         <button
           onClick={() => setShowCreateModal(true)}
           className="px-6 py-3 bg-gradient-to-r from-purple-600 to-blue-600 text-white font-medium rounded-lg hover:from-purple-700 hover:to-blue-700 transition-all duration-200 shadow-lg hover:shadow-xl"
-          role="button"
         >
           Create Pipeline
         </button>
@@ -311,53 +310,46 @@ const ETLPipeline: React.FC = () => {
               <button
                 onClick={() => handleRunPipeline(pipeline.id)}
                 className="px-4 py-2 bg-blue-500 text-white text-sm font-medium rounded-lg hover:bg-blue-600 transition-colors"
-                role="button"
-              >
+                    >
                 Run Now
               </button>
               {pipeline.status === 'active' ? (
                 <button
                   onClick={() => handlePausePipeline(pipeline.id)}
                   className="px-4 py-2 bg-yellow-500 text-white text-sm font-medium rounded-lg hover:bg-yellow-600 transition-colors"
-                  role="button"
-                >
+                        >
                   Pause
                 </button>
               ) : (
                 <button
                   onClick={() => handleResumePipeline(pipeline.id)}
                   className="px-4 py-2 bg-green-500 text-white text-sm font-medium rounded-lg hover:bg-green-600 transition-colors"
-                  role="button"
-                >
+                        >
                   Resume
                 </button>
               )}
               <button
                 onClick={() => openEditModal(pipeline)}
                 className="px-4 py-2 bg-gray-500 text-white text-sm font-medium rounded-lg hover:bg-gray-600 transition-colors"
-                role="button"
-              >
+                    >
                 Edit
               </button>
               <button
                 onClick={() => openDeleteConfirm(pipeline)}
                 className="px-4 py-2 bg-red-500 text-white text-sm font-medium rounded-lg hover:bg-red-600 transition-colors"
-                role="button"
-              >
+                    >
                 Delete
               </button>
               <button
                 onClick={() => openRunsModal(pipeline)}
                 className="px-4 py-2 bg-purple-500 text-white text-sm font-medium rounded-lg hover:bg-purple-600 transition-colors"
-                role="button"
-              >
+                    >
                 View Runs
               </button>
               <button
                 onClick={() => openRulesModal(pipeline)}
                 className="px-4 py-2 bg-indigo-500 text-white text-sm font-medium rounded-lg hover:bg-indigo-600 transition-colors"
-                role="button"
-              >
+                    >
                 Configure Rules
               </button>
             </div>
@@ -373,99 +365,100 @@ const ETLPipeline: React.FC = () => {
               <h3 className="text-2xl font-bold text-gray-900">Create New ETL Pipeline</h3>
             </div>
             <div className="p-6 space-y-4">
-              <label htmlFor="pipeline-name" className="block text-sm font-medium text-gray-700 mb-1">
-                Pipeline Name
-              </label>
-              <input
-                id="pipeline-name"
-                type="text"
-                value={formData.name}
-                onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none transition-all"
-                placeholder="Enter pipeline name"
-              />
-              {validationErrors.name && (
-                <p className="mt-1 text-sm text-red-600">{validationErrors.name}</p>
-              )}
-            </div>
-            <div>
-              <label htmlFor="data-source" className="block text-sm font-medium text-gray-700 mb-1">
-                Data Source
-              </label>
-              <select
-                id="data-source"
-                value={formData.source_id}
-                onChange={(e) => setFormData({ ...formData, source_id: e.target.value })}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none transition-all bg-white"
-              >
-                <option value="">Select a source</option>
-                {dataSources.map(source => (
-                  <option key={source.id} value={source.id}>
-                    {source.name}
-                  </option>
-                ))}
-              </select>
-              {validationErrors.source_id && (
-                <p className="mt-1 text-sm text-red-600">{validationErrors.source_id}</p>
-              )}
-            </div>
-            <div>
-              <label htmlFor="schedule" className="block text-sm font-medium text-gray-700 mb-1">
-                Schedule (Cron Expression)
-              </label>
-              <input
-                id="schedule"
-                type="text"
-                value={formData.schedule}
-                onChange={(e) => setFormData({ ...formData, schedule: e.target.value })}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none transition-all"
-                placeholder="e.g., 0 */6 * * *"
-              />
-              <div className="mt-3 flex flex-wrap gap-2">
-                <button
-                  onClick={() => setSchedulePreset('0 * * * *')}
-                  className="px-3 py-1 bg-gray-100 hover:bg-gray-200 text-gray-700 text-sm rounded-md transition-colors"
-                  type="button"
+              <div>
+                <label htmlFor="pipeline-name" className="block text-sm font-medium text-gray-700 mb-1">
+                  Pipeline Name
+                </label>
+                <input
+                  id="pipeline-name"
+                  type="text"
+                  value={formData.name}
+                  onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none transition-all"
+                  placeholder="Enter pipeline name"
+                />
+                {validationErrors.name && (
+                  <p className="mt-1 text-sm text-red-600">{validationErrors.name}</p>
+                )}
+              </div>
+              <div>
+                <label htmlFor="data-source" className="block text-sm font-medium text-gray-700 mb-1">
+                  Data Source
+                </label>
+                <select
+                  id="data-source"
+                  value={formData.source_id}
+                  onChange={(e) => setFormData({ ...formData, source_id: e.target.value })}
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none transition-all bg-white"
                 >
-                  Every Hour
+                  <option value="">Select a source</option>
+                  {dataSources.map(source => (
+                    <option key={source.id} value={source.id}>
+                      {source.name}
+                    </option>
+                  ))}
+                </select>
+                {validationErrors.source_id && (
+                  <p className="mt-1 text-sm text-red-600">{validationErrors.source_id}</p>
+                )}
+              </div>
+              <div>
+                <label htmlFor="schedule" className="block text-sm font-medium text-gray-700 mb-1">
+                  Schedule (Cron Expression)
+                </label>
+                <input
+                  id="schedule"
+                  type="text"
+                  value={formData.schedule}
+                  onChange={(e) => setFormData({ ...formData, schedule: e.target.value })}
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none transition-all"
+                  placeholder="e.g., 0 */6 * * *"
+                />
+                <div className="mt-3 flex flex-wrap gap-2">
+                  <button
+                    onClick={() => setSchedulePreset('0 * * * *')}
+                    className="px-3 py-1 bg-gray-100 hover:bg-gray-200 text-gray-700 text-sm rounded-md transition-colors"
+                    type="button"
+                  >
+                    Every Hour
+                  </button>
+                  <button
+                    onClick={() => setSchedulePreset('0 */6 * * *')}
+                    className="px-3 py-1 bg-gray-100 hover:bg-gray-200 text-gray-700 text-sm rounded-md transition-colors"
+                    type="button"
+                  >
+                    Every 6 Hours
+                  </button>
+                  <button
+                    onClick={() => setSchedulePreset('0 0 * * *')}
+                    className="px-3 py-1 bg-gray-100 hover:bg-gray-200 text-gray-700 text-sm rounded-md transition-colors"
+                    type="button"
+                  >
+                    Daily at Midnight
+                  </button>
+                  <button
+                    onClick={() => setSchedulePreset('0 0 * * 0')}
+                    className="px-3 py-1 bg-gray-100 hover:bg-gray-200 text-gray-700 text-sm rounded-md transition-colors"
+                    type="button"
+                  >
+                    Weekly
+                  </button>
+                </div>
+              </div>
+              <div className="flex justify-end gap-3 pt-4 border-t border-gray-200">
+                <button
+                  onClick={() => { setShowCreateModal(false); resetForm(); }}
+                  className="px-6 py-2 bg-gray-200 text-gray-700 font-medium rounded-lg hover:bg-gray-300 transition-colors"
+                >
+                  Cancel
                 </button>
                 <button
-                  onClick={() => setSchedulePreset('0 */6 * * *')}
-                  className="px-3 py-1 bg-gray-100 hover:bg-gray-200 text-gray-700 text-sm rounded-md transition-colors"
-                  type="button"
-                >
-                  Every 6 Hours
-                </button>
-                <button
-                  onClick={() => setSchedulePreset('0 0 * * *')}
-                  className="px-3 py-1 bg-gray-100 hover:bg-gray-200 text-gray-700 text-sm rounded-md transition-colors"
-                  type="button"
-                >
-                  Daily at Midnight
-                </button>
-                <button
-                  onClick={() => setSchedulePreset('0 0 * * 0')}
-                  className="px-3 py-1 bg-gray-100 hover:bg-gray-200 text-gray-700 text-sm rounded-md transition-colors"
-                  type="button"
-                >
-                  Weekly
+                  onClick={handleCreatePipeline}
+                  className="px-6 py-2 bg-gradient-to-r from-purple-600 to-blue-600 text-white font-medium rounded-lg hover:from-purple-700 hover:to-blue-700 transition-all duration-200"
+                        >
+                  Save Pipeline
                 </button>
               </div>
-            </div>
-            <div className="flex justify-end gap-3 pt-4 border-t border-gray-200">
-              <button
-                onClick={() => { setShowCreateModal(false); resetForm(); }}
-                className="px-6 py-2 bg-gray-200 text-gray-700 font-medium rounded-lg hover:bg-gray-300 transition-colors"
-              >
-                Cancel
-              </button>
-              <button
-                onClick={handleCreatePipeline}
-                className="px-6 py-2 bg-gradient-to-r from-purple-600 to-blue-600 text-white font-medium rounded-lg hover:from-purple-700 hover:to-blue-700 transition-all duration-200"
-                role="button"
-              >
-                Save Pipeline
-              </button>
             </div>
           </div>
         </div>
@@ -513,8 +506,7 @@ const ETLPipeline: React.FC = () => {
                 <button
                   onClick={handleUpdatePipeline}
                   className="px-6 py-2 bg-gradient-to-r from-purple-600 to-blue-600 text-white font-medium rounded-lg hover:from-purple-700 hover:to-blue-700 transition-all duration-200"
-                  role="button"
-                >
+                        >
                   Save Changes
                 </button>
               </div>
@@ -580,8 +572,7 @@ const ETLPipeline: React.FC = () => {
                 <button
                   onClick={addFieldMapping}
                   className="mb-3 px-4 py-2 bg-blue-500 text-white text-sm font-medium rounded-lg hover:bg-blue-600 transition-colors"
-                  role="button"
-                >
+                        >
                   Add Mapping
                 </button>
                 <div className="space-y-2">
@@ -605,8 +596,7 @@ const ETLPipeline: React.FC = () => {
                 <button
                   onClick={handleValidateRules}
                   className="px-6 py-2 bg-green-500 text-white font-medium rounded-lg hover:bg-green-600 transition-colors"
-                  role="button"
-                >
+                        >
                   Validate Rules
                 </button>
                 <button
@@ -647,8 +637,7 @@ const ETLPipeline: React.FC = () => {
                 <button
                   onClick={handleDeletePipeline}
                   className="flex-1 px-4 py-2 bg-red-500 text-white font-medium rounded-lg hover:bg-red-600 transition-colors"
-                  role="button"
-                >
+                        >
                   Confirm Delete
                 </button>
               </div>

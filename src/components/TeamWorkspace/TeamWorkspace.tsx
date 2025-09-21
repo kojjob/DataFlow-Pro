@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import {
   Box,
   Grid,
@@ -24,7 +24,6 @@ import {
   Divider,
   Badge,
   CircularProgress,
-  Tooltip,
   Dialog,
   DialogTitle,
   DialogContent,
@@ -33,20 +32,15 @@ import {
 import {
   Group,
   Add,
-  Settings,
   MoreVert,
   Comment,
   Share,
   Edit,
-  Delete,
   PersonAdd,
-  Notifications,
   Task,
   Description,
   Dashboard,
   Timeline,
-  Check,
-  Close,
   Send,
   AttachFile,
   VideoCall,
@@ -105,23 +99,40 @@ const TeamWorkspace: React.FC = () => {
   const [inviteDialogOpen, setInviteDialogOpen] = useState(false);
   const [projectMenuAnchor, setProjectMenuAnchor] = useState<null | HTMLElement>(null);
   const [searchQuery, setSearchQuery] = useState('');
-  const [filterRole, setFilterRole] = useState<string>('all');
   const [newComment, setNewComment] = useState('');
   const [comments, setComments] = useState<Comment[]>([]);
 
+  // Ref to track timeout for cleanup
+  const loadTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+
   useEffect(() => {
     loadWorkspaceData();
+
+    // Cleanup function for any pending timeouts or intervals
+    return () => {
+      // Clear any pending timeout when component unmounts
+      if (loadTimeoutRef.current) {
+        clearTimeout(loadTimeoutRef.current);
+        loadTimeoutRef.current = null;
+      }
+    };
   }, []);
 
   const loadWorkspaceData = async () => {
+    // Clear any existing timeout
+    if (loadTimeoutRef.current) {
+      clearTimeout(loadTimeoutRef.current);
+    }
+
     setLoading(true);
     // Simulate API calls
-    setTimeout(() => {
+    loadTimeoutRef.current = setTimeout(() => {
       setTeamMembers(getMockTeamMembers());
       setProjects(getMockProjects());
       setActivities(getMockActivities());
       setComments(getMockComments());
       setLoading(false);
+      loadTimeoutRef.current = null; // Clear ref after completion
     }, 1000);
   };
 

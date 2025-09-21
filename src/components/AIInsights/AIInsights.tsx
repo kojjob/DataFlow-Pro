@@ -22,9 +22,6 @@ import {
   FormControl,
   InputLabel,
   SelectChangeEvent,
-  Tooltip,
-  Badge,
-  Divider,
   Stack,
 } from '@mui/material';
 import {
@@ -32,44 +29,27 @@ import {
   TrendingUp,
   TrendingDown,
   Warning,
-  Error as ErrorIcon,
-  CheckCircle,
-  Psychology,
   Timeline,
   Lightbulb,
   Download,
-  MoreVert,
   Close,
-  ArrowUpward,
   ArrowDownward,
-  Remove,
   AutoGraph,
-  Insights,
   TrendingFlat,
   Speed,
   Security,
   AttachMoney,
   People,
 } from '@mui/icons-material';
-import { motion, AnimatePresence } from 'framer-motion';
 import {
   LineChart,
   Line,
-  AreaChart,
-  Area,
-  BarChart,
-  Bar,
-  RadarChart,
-  Radar,
   XAxis,
   YAxis,
   CartesianGrid,
   Tooltip as RechartsTooltip,
   Legend,
   ResponsiveContainer,
-  PolarGrid,
-  PolarAngleAxis,
-  PolarRadiusAxis,
 } from 'recharts';
 import {
   aiInsightsService,
@@ -98,7 +78,7 @@ const AIInsights: React.FC = () => {
   const [periodAnchor, setPeriodAnchor] = useState<null | HTMLElement>(null);
   const [exportAnchor, setExportAnchor] = useState<null | HTMLElement>(null);
   const [selectedAnomaly, setSelectedAnomaly] = useState<Anomaly | null>(null);
-  const [realTimeConnected, setRealTimeConnected] = useState(true);
+  const [realTimeConnected] = useState(true);
 
   // Fetch all insights data
   const fetchInsights = async () => {

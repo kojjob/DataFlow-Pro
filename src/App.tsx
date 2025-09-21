@@ -1,19 +1,25 @@
-import React from 'react';
+import React, { Suspense } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
+import CircularProgress from '@mui/material/CircularProgress';
+import Box from '@mui/material/Box';
 import './App.css';
+import { authService } from './services/authService';
+
+// Eagerly loaded components (used immediately)
 import AppLayout from './components/Navigation/AppLayout';
-import Dashboard from './components/Dashboard/Dashboard';
 import LoginPage from './components/Auth/LoginPage';
 import SignUpPage from './components/Auth/SignUpPage';
-import DataSources from './components/DataSources';
-import ETLPipeline from './components/ETLPipeline/ETLPipeline';
-import AIInsights from './components/AIInsights/AIInsights';
-import Analytics from './components/Analytics/Analytics';
-import TeamWorkspace from './components/TeamWorkspace/TeamWorkspace';
-import FileUpload from './components/FileUpload/FileUpload';
-import { authService } from './services/authService';
+
+// Lazy loaded components (loaded on demand)
+const Dashboard = React.lazy(() => import('./components/Dashboard/Dashboard'));
+const DataSources = React.lazy(() => import('./components/DataSources'));
+const ETLPipeline = React.lazy(() => import('./components/ETLPipeline/ETLPipeline'));
+const AIInsights = React.lazy(() => import('./components/AIInsights/AIInsights'));
+const Analytics = React.lazy(() => import('./components/Analytics/Analytics'));
+const TeamWorkspace = React.lazy(() => import('./components/TeamWorkspace/TeamWorkspace'));
+const FileUpload = React.lazy(() => import('./components/FileUpload/FileUpload'));
 
 // Create a custom theme
 const theme = createTheme({
@@ -79,6 +85,18 @@ const theme = createTheme({
   },
 });
 
+// Loading component for lazy loaded routes
+const LoadingFallback = () => (
+  <Box
+    display="flex"
+    justifyContent="center"
+    alignItems="center"
+    minHeight="100vh"
+  >
+    <CircularProgress />
+  </Box>
+);
+
 function App() {
   // Check if user is authenticated
   const isAuthenticated = authService.isAuthenticated();
@@ -87,7 +105,8 @@ function App() {
     <ThemeProvider theme={theme}>
       <CssBaseline />
       <Router>
-        <Routes>
+        <Suspense fallback={<LoadingFallback />}>
+          <Routes>
           {/* Landing page redirect */}
           <Route path="/" element={<Navigate to="/dashboard" replace />} />
 
@@ -124,6 +143,7 @@ function App() {
           {/* Catch all route */}
           <Route path="*" element={<Navigate to="/dashboard" replace />} />
         </Routes>
+        </Suspense>
       </Router>
     </ThemeProvider>
   );
