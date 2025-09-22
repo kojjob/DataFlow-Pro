@@ -14,11 +14,13 @@ import {
   Avatar,
   Menu,
   MenuItem,
-  Badge,
   Divider,
   Chip,
   Button
 } from '@mui/material';
+import { useAuth } from '../../contexts/AuthContext';
+import { useNotification } from '../../contexts/NotificationContext';
+import NotificationCenter from '../Notifications/NotificationCenter';
 import {
   Dashboard as DashboardIcon,
   Analytics,
@@ -26,7 +28,6 @@ import {
   Storage,
   Group,
   Settings,
-  Notifications,
   ExitToApp,
   Person,
   Menu as MenuIcon,
@@ -38,7 +39,6 @@ import {
 } from '@mui/icons-material';
 import { useNavigate } from 'react-router-dom';
 import Dashboard from '../Dashboard/Dashboard';
-import { authService } from '../../services/authService';
 
 const drawerWidth = 280;
 
@@ -49,8 +49,9 @@ interface AppLayoutProps {
 const AppLayout: React.FC<AppLayoutProps> = ({ children }) => {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
-  const [notificationAnchor, setNotificationAnchor] = useState<null | HTMLElement>(null);
   const navigate = useNavigate();
+  const { user, logout } = useAuth();
+  const { showNotification } = useNotification();
 
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
@@ -64,13 +65,6 @@ const AppLayout: React.FC<AppLayoutProps> = ({ children }) => {
     setAnchorEl(null);
   };
 
-  const handleNotificationOpen = (event: React.MouseEvent<HTMLElement>) => {
-    setNotificationAnchor(event.currentTarget);
-  };
-
-  const handleNotificationClose = () => {
-    setNotificationAnchor(null);
-  };
 
   const menuItems = [
     {
@@ -280,15 +274,7 @@ const AppLayout: React.FC<AppLayoutProps> = ({ children }) => {
           <Box sx={{ flex: 1 }} />
 
           {/* Right side icons */}
-          <IconButton
-            size="large"
-            color="inherit"
-            onClick={handleNotificationOpen}
-          >
-            <Badge badgeContent={4} color="error">
-              <Notifications />
-            </Badge>
-          </IconButton>
+          <NotificationCenter />
 
           <IconButton
             size="large"
@@ -303,7 +289,7 @@ const AppLayout: React.FC<AppLayoutProps> = ({ children }) => {
                 height: 35
               }}
             >
-              JD
+              {user?.full_name ? user.full_name.split(' ').map(n => n[0]).join('').toUpperCase() : 'U'}
             </Avatar>
           </IconButton>
         </Toolbar>
@@ -373,13 +359,13 @@ const AppLayout: React.FC<AppLayoutProps> = ({ children }) => {
       >
         <Box sx={{ px: 2, py: 1.5 }}>
           <Typography variant="subtitle1" sx={{ fontWeight: 'bold' }}>
-            John Doe
+            {user?.full_name || user?.username || 'User'}
           </Typography>
           <Typography variant="body2" color="text.secondary">
-            john.doe@dataflow.com
+            {user?.email || 'user@example.com'}
           </Typography>
           <Chip
-            label="Admin"
+            label={user?.role === 'admin' ? 'Admin' : 'User'}
             size="small"
             sx={{ mt: 1, bgcolor: '#667eea', color: 'white' }}
           />
@@ -400,7 +386,7 @@ const AppLayout: React.FC<AppLayoutProps> = ({ children }) => {
         <Divider />
         <MenuItem onClick={async () => {
           handleMenuClose();
-          await authService.logout();
+          await logout();
           navigate('/login');
         }}>
           <ListItemIcon>
@@ -410,74 +396,6 @@ const AppLayout: React.FC<AppLayoutProps> = ({ children }) => {
         </MenuItem>
       </Menu>
 
-      {/* Notifications Menu */}
-      <Menu
-        anchorEl={notificationAnchor}
-        open={Boolean(notificationAnchor)}
-        onClose={handleNotificationClose}
-        PaperProps={{
-          sx: { width: 350, mt: 1.5, maxHeight: 400 }
-        }}
-      >
-        <Box sx={{ px: 2, py: 1.5 }}>
-          <Typography variant="subtitle1" sx={{ fontWeight: 'bold' }}>
-            Notifications
-          </Typography>
-        </Box>
-        <Divider />
-        <List sx={{ py: 0 }}>
-          {[
-            {
-              title: 'New AI Insight Available',
-              description: 'Revenue prediction model completed',
-              time: '5 min ago',
-              color: '#4caf50'
-            },
-            {
-              title: 'ETL Pipeline Completed',
-              description: 'Sales data pipeline finished processing',
-              time: '1 hour ago',
-              color: '#2196f3'
-            },
-            {
-              title: 'Alert: Anomaly Detected',
-              description: 'Unusual pattern in user engagement',
-              time: '2 hours ago',
-              color: '#ff9800'
-            },
-            {
-              title: 'Report Generated',
-              description: 'Monthly analytics report is ready',
-              time: '3 hours ago',
-              color: '#9c27b0'
-            }
-          ].map((notification, index) => (
-            <ListItem
-              key={index}
-              sx={{
-                borderLeft: `3px solid ${notification.color}`,
-                '&:hover': { bgcolor: 'action.hover' }
-              }}
-            >
-              <Box sx={{ width: '100%' }}>
-                <Typography variant="body2" sx={{ fontWeight: 'bold' }}>
-                  {notification.title}
-                </Typography>
-                <Typography variant="caption" color="text.secondary">
-                  {notification.description}
-                </Typography>
-                <Typography variant="caption" display="block" sx={{ mt: 0.5, color: 'text.disabled' }}>
-                  {notification.time}
-                </Typography>
-              </Box>
-            </ListItem>
-          ))}
-        </List>
-        <Divider />
-        <Box sx={{ p: 1, textAlign: 'center' }}>
-          <Button size="small">View All Notifications</Button>
-        </Box>
-      </Menu>
     </Box>
   );
 };

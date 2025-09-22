@@ -13,9 +13,10 @@ import {
   MenuItem,
   Chip,
   Button,
-  Grid,
-  Alert
+  Alert,
+  Snackbar
 } from '@mui/material';
+import { Grid } from '@mui/material';
 import {
   TrendingUp,
   TrendingDown,
@@ -31,6 +32,7 @@ import FinancialChart from './FinancialChart';
 import PerformanceMetrics from './PerformanceMetrics';
 import RevenueChart from './RevenueChart';
 import UserActivityHeatmap from './UserActivityHeatmap';
+import NotificationDemo from '../NotificationDemo';
 import { dashboardService, DashboardMetrics } from '../../services/dashboardService';
 import './Dashboard.css';
 
@@ -49,6 +51,8 @@ const Dashboard: React.FC = () => {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const [selectedPeriod, setSelectedPeriod] = useState('month');
   const [metricsData, setMetricsData] = useState<DashboardMetrics | null>(null);
+  const [error, setError] = useState<string | null>(null);
+  const [showError, setShowError] = useState(false);
 
   useEffect(() => {
     loadDashboardData();
@@ -56,11 +60,17 @@ const Dashboard: React.FC = () => {
 
   const loadDashboardData = async () => {
     setLoading(true);
+    setError(null);
     try {
       const data = await dashboardService.getMetrics();
       setMetricsData(data);
     } catch (error) {
       console.error('Error loading dashboard data:', error);
+      setError('Failed to load dashboard metrics. Using demo data.');
+      setShowError(true);
+      // Use fallback data that's returned by the service
+      const fallbackData = await dashboardService.getMetrics();
+      setMetricsData(fallbackData);
     } finally {
       setLoading(false);
     }
@@ -110,7 +120,14 @@ const Dashboard: React.FC = () => {
   };
 
   return (
-    <Box sx={{ p: { xs: 2, sm: 3, md: 4 }, backgroundColor: '#f8fafc', minHeight: '100vh' }}>
+    <Box sx={{
+      maxWidth: '1400px',
+      mx: 'auto',
+      p: { xs: 2, sm: 3, md: 4 },
+      backgroundColor: '#f8fafc',
+      minHeight: '100vh',
+      width: '100%'
+    }}>
       {/* Header */}
       <Box sx={{
         mb: 4,
@@ -614,6 +631,11 @@ const Dashboard: React.FC = () => {
         </motion.div>
       </Box>
 
+      {/* Notification System Demo */}
+      <Box sx={{ mb: 6 }}>
+        <NotificationDemo />
+      </Box>
+
       {/* Menu */}
       <Menu
         anchorEl={anchorEl}
@@ -624,6 +646,22 @@ const Dashboard: React.FC = () => {
         <MenuItem onClick={handleMenuClose}>Print Chart</MenuItem>
         <MenuItem onClick={handleMenuClose}>Share Dashboard</MenuItem>
       </Menu>
+
+      {/* Error Snackbar */}
+      <Snackbar
+        open={showError}
+        autoHideDuration={6000}
+        onClose={() => setShowError(false)}
+        anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+      >
+        <Alert
+          onClose={() => setShowError(false)}
+          severity="warning"
+          sx={{ width: '100%' }}
+        >
+          {error}
+        </Alert>
+      </Snackbar>
     </Box>
   );
 };

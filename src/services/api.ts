@@ -1,13 +1,13 @@
 import axios from 'axios';
 
-const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:8000';
+const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:8002';
 
 const api = axios.create({
   baseURL: API_BASE_URL,
   headers: {
     'Content-Type': 'application/json',
   },
-  withCredentials: true,
+  withCredentials: false, // Temporarily disabled for development without auth
 });
 
 api.interceptors.request.use(
@@ -35,11 +35,11 @@ api.interceptors.response.use(
 );
 
 export const apiService = {
-  get: <T>(url: string) => api.get<T>(url),
-  post: <T>(url: string, data?: any) => api.post<T>(url, data),
-  put: <T>(url: string, data?: any) => api.put<T>(url, data),
-  delete: <T>(url: string) => api.delete<T>(url),
-  patch: <T>(url: string, data?: any) => api.patch<T>(url, data),
+  get: <T = any>(url: string, config?: any): Promise<{ data: T }> => api.get<T>(url, config),
+  post: <T = any>(url: string, data?: any, config?: any): Promise<{ data: T }> => api.post<T>(url, data, config),
+  put: <T = any>(url: string, data?: any, config?: any): Promise<{ data: T }> => api.put<T>(url, data, config),
+  delete: <T = any>(url: string, config?: any): Promise<{ data: T }> => api.delete<T>(url, config),
+  patch: <T = any>(url: string, data?: any, config?: any): Promise<{ data: T }> => api.patch<T>(url, data, config),
 };
 
 export default api;

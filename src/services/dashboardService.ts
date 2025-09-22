@@ -43,7 +43,7 @@ export const dashboardService = {
   // Get dashboard metrics
   getMetrics: async (): Promise<DashboardMetrics> => {
     try {
-      const response = await apiService.get<DashboardMetrics>('/api/v1/dashboards/metrics');
+      const response = await apiService.get<DashboardMetrics>('/api/v1/dashboard/metrics');
       return response.data;
     } catch (error) {
       console.error('Error fetching dashboard metrics:', error);
@@ -64,7 +64,7 @@ export const dashboardService = {
   // Get financial chart data
   getFinancialData: async (period: string = 'month'): Promise<ChartData> => {
     try {
-      const response = await apiService.get<ChartData>(`/api/v1/dashboards/financial?period=${period}`);
+      const response = await apiService.get<ChartData>(`/api/v1/dashboard/financial?period=${period}`);
       return response.data;
     } catch (error) {
       console.error('Error fetching financial data:', error);
@@ -95,7 +95,7 @@ export const dashboardService = {
   // Get performance metrics
   getPerformanceData: async (): Promise<PerformanceData> => {
     try {
-      const response = await apiService.get<PerformanceData>('/api/v1/dashboards/performance');
+      const response = await apiService.get<PerformanceData>('/api/v1/dashboard/performance');
       return response.data;
     } catch (error) {
       console.error('Error fetching performance data:', error);
@@ -111,7 +111,7 @@ export const dashboardService = {
   // Get revenue breakdown
   getRevenueBreakdown: async (): Promise<RevenueBreakdown> => {
     try {
-      const response = await apiService.get<RevenueBreakdown>('/api/v1/dashboards/revenue-breakdown');
+      const response = await apiService.get<RevenueBreakdown>('/api/v1/dashboard/revenue-breakdown');
       return response.data;
     } catch (error) {
       console.error('Error fetching revenue breakdown:', error);
@@ -125,7 +125,7 @@ export const dashboardService = {
   // Get user activity heatmap data
   getUserActivity: async (): Promise<UserActivity> => {
     try {
-      const response = await apiService.get<UserActivity>('/api/v1/dashboards/user-activity');
+      const response = await apiService.get<UserActivity>('/api/v1/dashboard/user-activity');
       return response.data;
     } catch (error) {
       console.error('Error fetching user activity:', error);
