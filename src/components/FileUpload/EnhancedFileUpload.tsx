@@ -51,8 +51,13 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { uploadService, UploadedFile, UploadProgress } from '../../services/uploadService';
 
 // TypeScript interfaces
-interface FileWithProgress extends File {
+interface FileWithProgress {
   id: string;
+  name: string;
+  size: number;
+  type: string;
+  lastModified: number;
+  file: File;
   progress: number;
   status: 'pending' | 'uploading' | 'success' | 'error' | 'validating';
   error?: string;
@@ -197,7 +202,11 @@ const EnhancedFileUpload: React.FC = () => {
     const processedFiles: FileWithProgress[] = newFiles.map((file) => {
       const validation = validateFile(file);
       return {
-        ...file,
+        name: file.name,
+        size: file.size,
+        type: file.type,
+        lastModified: file.lastModified,
+        file: file,
         id: `${file.name}-${Date.now()}-${Math.random()}`,
         progress: 0,
         status: validation.valid ? 'pending' : 'error',
@@ -239,7 +248,7 @@ const EnhancedFileUpload: React.FC = () => {
         );
 
         // Upload file
-        const result = await uploadService.uploadFile(file, {
+        const result = await uploadService.uploadFile(file.file, {
           onProgress: (progress: UploadProgress) => {
             setFiles(prev =>
               prev.map(f =>
@@ -325,9 +334,9 @@ const EnhancedFileUpload: React.FC = () => {
 
   // Preview CSV file
   const handlePreview = async (file: FileWithProgress) => {
-    if (file.name.toLowerCase().endsWith('.csv')) {
+    if (file.name && file.name.toLowerCase().endsWith('.csv')) {
       try {
-        const data = await uploadService.parseCSVPreview(file);
+        const data = await uploadService.parseCSVPreview(file.file);
         setPreviewData(data);
         setSelectedFile(file);
       } catch (error) {
@@ -464,7 +473,7 @@ const EnhancedFileUpload: React.FC = () => {
                   {SUPPORTED_FORMATS.map((format) => (
                     <Tooltip key={format.category} title={format.formats.join(', ')}>
                       <Chip
-                        icon={format.icon as React.ReactElement}
+                        icon={React.cloneElement(format.icon as React.ReactElement)}
                         label={format.category}
                         size="small"
                         sx={{
@@ -591,7 +600,7 @@ const EnhancedFileUpload: React.FC = () => {
                                   <Refresh />
                                 </IconButton>
                               )}
-                              {file.name.toLowerCase().endsWith('.csv') && file.status === 'success' && (
+                              {file.name && file.name.toLowerCase().endsWith('.csv') && file.status === 'success' && (
                                 <IconButton
                                   edge="end"
                                   aria-label="preview"
@@ -751,8 +760,8 @@ const EnhancedFileUpload: React.FC = () => {
               <TableBody>
                 {previewData.slice(0, 5).map((row, index) => (
                   <TableRow key={index}>
-                    {Object.values(row).map((value, cellIndex) => (
-                      <TableCell key={cellIndex}>{String(value)}</TableCell>
+                    {row && Object.values(row).map((value, cellIndex) => (
+                      <TableCell key={cellIndex}>{String(value ?? '')}</TableCell>
                     ))}
                   </TableRow>
                 ))}
